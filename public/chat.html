@@ -12,7 +12,7 @@
     <link rel="stylesheet" media="screen"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
     <!--Load Pace AJAX Progress Bar (optional)-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
@@ -22,7 +22,7 @@
     <!--Custom css-->
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <!--Js for example-->
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/chat.js"></script>
 </head>
 <body>
 <div class="container">
@@ -36,7 +36,6 @@
                     IBM Bluemix App
                 </h1>
             </div>
-
             <div class="alert alert-dismissible alert-message-wrapper" role="alert" style="display: none">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <span class="message">Best check yo self, you're not looking too good.</span>
@@ -79,17 +78,17 @@
             <div role="tabpanel" class="tab-sms-chat-wrapper" style="display: none">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="index.html" aria-controls="home" role="tab" data-toggle="tab">Send SMS</a></li>
-                    <li role="presentation"><a href="chat.html" >Send Message</a></li>
+                    <li role="presentation"><a href="index.html">Send SMS</a></li>
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Send Message</a></li>
                 </ul>
             </div>
-
             <div class="hidden" id="logged-in">
+
                 <div class="clearfix">
-                    <h3 class="text-center pull-left">Send SMS</h3>
+                    <h3 class="text-center pull-left">Send Message</h3>
 
                     <div class="pull-right logout-wrapper">
-                        <button class="btn btn-warning btn-sm pull-right" id="logout-btn" title="Sign out">
+                        <button class="btn btn-warning btn-sm pull-right" id="logout-btn">
                             <i class="glyphicon glyphicon-log-out"></i>
                         </button>
                         <p class="h4 pull-right">
@@ -98,21 +97,22 @@
                     </div>
                 </div>
                 <hr/>
-                <div id="sms-container">
-                    <div id="sms-input">
-                        <div class="form-group">
-                            <label for="sms_from">Sender</label>
-                            <input type="text" name="sms_from" id="sms_from" class="form-control"/>
+                <div id="chat-container">
+                    <div class="well chat-messages-wrapper">
+                        <h3>
+                            Messages
+                        </h3>
+                        <div id="chat-messages"></div>
+                    </div>
 
-                        </div>
+                    <div id="message-input">
                         <div class="form-group">
-                            <label for="sms_to" class="required">Receiver <abbr title="required">*</abbr></label>
-                            <input type="text" name="sms_to" id="sms_to" class="form-control"/>
-
+                            <label for="chat-contacts">Select Contact <abbr title="required">*</abbr></label>
+                            <select name="chat-contacts" id="chat-contacts" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="sms_message" class="required">Message <abbr title="required">*</abbr></label>
-                            <input type="text" name="sms_message" id="sms_message" class="form-control"/>
+                            <textarea type="text" name="sms_message" id="sms_message" class="form-control"></textarea>
 
                         </div>
                         <button name="button" type="button" class="btn btn-success" id="send-btn">Send</button>

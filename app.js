@@ -39,7 +39,6 @@ app.get('/getUserAccessToken', function (request, response) {
         var dataJson = JSON.parse(data);
         response.send(dataJson);
     });
-
 });
 
 app.get('/sms', function (request, response) {
@@ -61,6 +60,68 @@ app.get('/sms', function (request, response) {
         var dataJson = JSON.parse(data);
         if (dataJson.message == "success") {
             console.log("Sent to " + to + ": " + text);
+        }
+        response.send(dataJson);
+    });
+
+});
+
+app.get('/message', function (request, response) {
+    var userAccessToken = request.query.userAccessToken;
+    var to = request.query.to;
+    var text = request.query.text;
+
+    if (typeof userAccessToken == "undefined" || userAccessToken == ''
+        || typeof text == "undefined" || text == '') {
+        response.send('{"message":"User Access Token, To and Text are required"}');
+        return;
+    }
+
+    var kandy = new Kandy();
+
+    kandy.sendIm(userAccessToken, to, text, function (data, res) {
+        var dataJson = JSON.parse(data);
+        if (dataJson.message == "success") {
+            console.log("Sent to " + to + ": " + text);
+        }
+        response.send(dataJson);
+    });
+
+});
+
+app.get('/addressbooks', function (request, response) {
+    var userAccessToken = request.query.userAccessToken;
+
+    if (typeof userAccessToken == "undefined" || userAccessToken == '') {
+        response.send('{"message":"User Access Token is required"}');
+        return;
+    }
+
+    var kandy = new Kandy();
+
+    kandy.getAddressbook(userAccessToken, function (data, res) {
+        var dataJson = JSON.parse(data);
+        if (dataJson.message == "success") {
+            console.log("got addressbook");
+        }
+        response.send(dataJson);
+    });
+
+});
+
+app.get('/getMessages', function (request, response) {
+    var userAccessToken = request.query.userAccessToken;
+
+    if (typeof userAccessToken == "undefined" || userAccessToken == '') {
+        response.send('{"message":"User Access Token is required"}');
+        return;
+    }
+
+    var kandy = new Kandy();
+
+    kandy.getIm(userAccessToken, true, function (data, res) {
+        var dataJson = JSON.parse(data);
+        if (dataJson.message == "success") {
         }
         response.send(dataJson);
     });

@@ -1,4 +1,6 @@
 $(function () {
+    var username;
+
     var currentMessageType = '';
     /**
      *
@@ -133,7 +135,130 @@ $(function () {
         $('#logged-in').removeClass('hidden');
         $('.username').text(userId);
         $('.tab-sms-chat-wrapper').show();
+
+        username = userId;
+
         hideMessage();
+
+        loadContacts();
+
+        // Checks every 5 seconds for incoming messages
+        setInterval(receiveMessages, 5000);
+    };
+
+    /**
+     * Function that loads all Kandy contacts and appends to DOM
+     * @returns {boolean}
+     */
+    var loadContacts = function() {
+        $.ajax({
+            dataType: 'json',
+            data: {userAccessToken: sessionStorage['user_access_token']},
+            url: 'addressbooks',
+            type: 'GET'
+        })
+            .done(function (data) {
+                if (data.message != 'success') {
+                    showMessage('Failed! Cannot get your address book.', 'error');
+                } else {
+                    var contacts = data.result.contacts;
+                    if (contacts.length == 0) {
+                        showMessage('Sorry, you have no contacts in your address book.', 'error');
+                    } else {
+                        // Iterate through entries and append contacts to DOM
+                        contacts.forEach(function (entry) {
+                            var $option = $('<option>');
+
+                            $option.val(entry.contact_user_name).text(entry.contact_user_name);
+                            $('#chat-contacts').append($option);
+                        });
+                    }
+                }
+            })
+            .fail(function () {
+                showMessage('Sorry, there was an error with your request!', 'error');
+            })
+            .always(function () {
+            });
+        return false;
+    };
+
+    /**
+     * Format date time
+     * @param d
+     * @returns {string}
+     */
+    function formatDate (d){
+        var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var date = d.getDay() + " " + month[d.getMonth()] + ", " +  d.getFullYear();
+        var time = d.toLocaleTimeString().toLowerCase();
+        return (date + " at " + time);
+    }(new Date());
+
+    /**
+     *
+     * @param username
+     * @param message
+     * @param dateTime
+     * @param otherUser
+     */
+    var appendMessage = function(username, message, dateTime, otherUser) {
+        var chatWrapperCls = 'chat-user-wrapper';
+        if (otherUser === true) {
+            chatWrapperCls = 'chat-other-user-wrapper';
+        }
+
+        var userNameDisplay;
+        userNameDisplay = '<i class="glyphicon glyphicon-user"></i>' + username;
+
+        var $username = $('<h5 class="chat-username" title="' + dateTime + '">').html(userNameDisplay);
+        var $message = $('<p>').text(message);
+        var $chatItem = $('<div class="col-md-12 chat-content"><div class="popover bottom"><div class="arrow"></div><div class="popover-content"></div></div></div>');
+
+        var $chatWrapper = $('<div class="row chat-message-wrapper ' + chatWrapperCls + '">');
+        $chatItem.find('.popover-content').append($message);
+        $chatWrapper.append($username, $chatItem);
+        $('#chat-messages').append($chatWrapper);
+
+        // Scroll to bottom the panel
+        $("body, html").animate({ scrollTop: $("#send-btn").offset().top}, 0); // 40 ms
+        $("#chat-messages").animate({ scrollTop: $("#chat-messages")[0].scrollHeight}, 0); // 40 ms
+    };
+
+    /**
+     * Function to receive messages from other Kandy users
+     * @returns {boolean}
+     */
+    var receiveMessages = function() {
+        $.ajax({
+            dataType: 'json',
+            data: {userAccessToken: sessionStorage['user_access_token']},
+            url: 'getMessages',
+            type: 'GET'
+        })
+            .done(function (data) {
+                if (data.message == 'success') {
+                    var messages = data.result.messages;
+                    if (messages.length > 0) {
+                        messages.forEach(function (msg) {
+
+                            if (msg.messageType == 'chat' && msg.contentType === 'text' && msg.message.mimeType == 'text/plain') {
+                                $('#sms_message').val('');
+                                appendMessage(msg.sender.user_id, msg.message.text, formatDate(new Date(msg.timestamp)), true);
+                            } else {
+                                // When the recieved messageType is not chat, display message type
+                                console.log('received ' + msg.messageType + ': ');
+                            }
+                        });
+                    }
+                }
+            })
+            .fail(function () {
+                showMessage('Sorry, there was an error with your request!', 'error');
+            })
+            .always(function () {
+            });
+        return false;
     };
 
     // Handle refresh page
@@ -152,6 +277,7 @@ $(function () {
         $('#login-form').removeClass('hidden');
         $('#logged-in').addClass('hidden');
         $('.username').text('');
+        $('#chat-contacts').html('');
         $('.tab-sms-chat-wrapper').hide();
         hideMessage();
 
@@ -160,8 +286,7 @@ $(function () {
 
     $('#send-btn').on('click', function () {
         var me = $(this);
-        var from = $('#sms_from').val();
-        var to = $('#sms_to').val();
+        var to = $('#chat-contacts').val();
         var message = $('#sms_message').val();
         if (to == '' || message == '') {
             showMessage('Please input fields marked (*).', 'error');
@@ -169,16 +294,18 @@ $(function () {
         }
         disableButton(me);
         $.ajax({
-            dataType: 'json',
-            data: {userAccessToken: sessionStorage['user_access_token'], from: from, to: to, text: message},
-            url: 'sms',
-            type: 'GET'
-        })
+                dataType: 'json',
+                data: {userAccessToken: sessionStorage['user_access_token'], to: to, text: message},
+                url: 'message',
+                type: 'GET'
+            })
             .done(function (data) {
                 if (data.message != 'success') {
                     showMessage('Failed to send message! Please try again.', 'error');
                 } else {
-                    showMessage('The message has been sent!', 'success');
+                    $('#sms_message').val('');
+                    var d = formatDate(new Date());
+                    appendMessage(username, message, d);
                 }
             })
             .fail(function () {
