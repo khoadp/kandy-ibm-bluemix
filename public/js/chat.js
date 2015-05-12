@@ -140,47 +140,8 @@ $(function () {
 
         hideMessage();
 
-        loadContacts();
-
         // Checks every 5 seconds for incoming messages
         setInterval(receiveMessages, 5000);
-    };
-
-    /**
-     * Function that loads all Kandy contacts and appends to DOM
-     * @returns {boolean}
-     */
-    var loadContacts = function() {
-        $.ajax({
-            dataType: 'json',
-            data: {userAccessToken: sessionStorage['user_access_token']},
-            url: 'addressbooks',
-            type: 'GET'
-        })
-            .done(function (data) {
-                if (data.message != 'success') {
-                    showMessage('Failed! Cannot get your address book.', 'error');
-                } else {
-                    var contacts = data.result.contacts;
-                    if (contacts.length == 0) {
-                        showMessage('Sorry, you have no contacts in your address book.', 'error');
-                    } else {
-                        // Iterate through entries and append contacts to DOM
-                        contacts.forEach(function (entry) {
-                            var $option = $('<option>');
-
-                            $option.val(entry.contact_user_name).text(entry.contact_user_name);
-                            $('#chat-contacts').append($option);
-                        });
-                    }
-                }
-            })
-            .fail(function () {
-                showMessage('Sorry, there was an error with your request!', 'error');
-            })
-            .always(function () {
-            });
-        return false;
     };
 
     /**
@@ -319,5 +280,11 @@ $(function () {
 
     $(document).ready(function(){
         fillAuthData();
+
+        $('#login-form input').on('keypress', function(e){
+            if (e.which == 13) {
+                $('#login-btn').trigger('click');
+            }
+        });
     });
 });

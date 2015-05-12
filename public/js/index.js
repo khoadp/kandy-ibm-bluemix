@@ -192,5 +192,12 @@ $(function () {
 
     $(document).ready(function(){
         fillAuthData();
+
+        // Enter submit login form
+        $('#login-form input').on('keypress', function(e){
+            if (e.which == 13) {
+                $('#login-btn').trigger('click');
+            }
+        });
     });
 });
