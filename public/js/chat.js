@@ -165,14 +165,19 @@ $(function () {
      */
     var appendMessage = function(username, message, dateTime, otherUser) {
         var chatWrapperCls = 'chat-user-wrapper';
-        if (otherUser === true) {
+        if (otherUser !== undefined) {
             chatWrapperCls = 'chat-other-user-wrapper';
         }
 
         var userNameDisplay;
         userNameDisplay = '<i class="glyphicon glyphicon-user"></i>' + username;
 
-        var $username = $('<h5 class="chat-username" title="' + dateTime + '">').html(userNameDisplay);
+        var otherUserElement = '';
+        if (otherUser !== undefined) {
+            otherUserElement = ' data-user-id="' + otherUser + '"';
+        }
+
+        var $username = $('<h5 class="chat-username"' + otherUserElement + ' title="' + dateTime + '">').html(userNameDisplay);
         var $message = $('<p>').text(message);
         var $chatItem = $('<div class="col-md-12 chat-content"><div class="popover bottom"><div class="arrow"></div><div class="popover-content"></div></div></div>');
 
@@ -205,7 +210,7 @@ $(function () {
 
                             if (msg.messageType == 'chat' && msg.contentType === 'text' && msg.message.mimeType == 'text/plain') {
                                 $('#sms_message').val('');
-                                appendMessage(msg.sender.user_id, msg.message.text, formatDate(new Date(msg.timestamp)), true);
+                                appendMessage(msg.sender.user_id, msg.message.text, formatDate(new Date(msg.timestamp)), msg.sender.full_user_id);
                             } else {
                                 // When the recieved messageType is not chat, display message type
                                 console.log('received ' + msg.messageType + ': ');
@@ -285,6 +290,10 @@ $(function () {
             if (e.which == 13) {
                 $('#login-btn').trigger('click');
             }
+        });
+
+        $('.chat-other-user-wrapper .chat-username').live('click', function(){
+            $('#chat-contacts').val($(this).attr('data-user-id'));
         });
     });
 });
