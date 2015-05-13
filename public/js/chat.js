@@ -89,6 +89,11 @@ $(function () {
      * @returns {boolean}
      */
     var loadContacts = function() {
+        if (getCookie("apiSecret") == '') {
+            $('.chat-contact-wrapper').html($('<input type="text" id="chat-contacts" class="form-control" placeholder="user@domain.com" />'));
+            return false;
+        }
+
         $.ajax({
                 dataType: 'json',
                 data: {apiKey: getCookie("apiKey"), domainApiSecret: getCookie("apiSecret")},
@@ -202,9 +207,7 @@ $(function () {
 
         hideMessage();
 
-        if (getCookie("apiSecret") !== '') {
-            loadContacts();
-        }
+        loadContacts();
 
         // Checks every 5 seconds for incoming messages
         setInterval(receiveMessages, 5000);
