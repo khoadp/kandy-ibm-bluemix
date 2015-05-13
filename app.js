@@ -41,6 +41,40 @@ app.get('/getUserAccessToken', function (request, response) {
     });
 });
 
+app.get('/getDomainAccessToken', function (request, response) {
+    var apiKey = request.query.apiKey;
+    var domainApiSecret = request.query.domainApiSecret;
+
+    if (typeof apiKey == "undefined" || apiKey == ''
+        || typeof domainApiSecret == "undefined" || domainApiSecret == '') {
+        response.send('{"message":"API Key, Domain Api Secret are required"}');
+        return;
+    }
+
+    var kandy = new Kandy(apiKey, domainApiSecret);
+
+    kandy.getDomainAccessToken(function (data, res) {
+        var dataJson = JSON.parse(data);
+        response.send(dataJson);
+    });
+});
+
+app.get('/getListUsers', function (request, response) {
+    var domainAccessToken = request.query.domainAccessToken;
+
+    if (typeof domainAccessToken == "undefined" || domainAccessToken == '') {
+        response.send('{"message":"Domain Access Token is required"}');
+        return;
+    }
+
+    var kandy = new Kandy();
+
+    kandy.getListUsers(domainAccessToken, function (data, res) {
+        var dataJson = JSON.parse(data);
+        response.send(dataJson);
+    });
+});
+
 app.get('/sms', function (request, response) {
     var userAccessToken = request.query.userAccessToken;
     var from = request.query.from;

@@ -70,16 +70,78 @@ $(function () {
     }
 
     var saveAuthData = function() {
-        var expireDays = 14;
+        var expireDays = 14;    // days
         setCookie("apiKey", $('#api_key').val(), expireDays);
+        setCookie("apiSecret", $('#api_secret').val(), expireDays);
         setCookie("username", $('#username').val(), expireDays);
         setCookie("password", $('#password').val(), expireDays);
     };
 
     var fillAuthData = function() {
         $('#api_key').val(getCookie("apiKey"));
+        $('#api_secret').val(getCookie("apiSecret"));
         $('#username').val(getCookie("username"));
         $('#password').val(getCookie("password"));
+    };
+
+    /**
+     * Function that loads all Kandy contacts and appends to DOM
+     * @returns {boolean}
+     */
+    var loadContacts = function() {
+        $.ajax({
+                dataType: 'json',
+                data: {apiKey: getCookie("apiKey"), domainApiSecret: getCookie("apiSecret")},
+                url: 'getDomainAccessToken',
+                type: 'GET'
+            })
+            .done(function (data) {
+                if (data.message != 'success') {
+                    return false;
+                } else {
+                    var domainAccessToken = data.result.domain_access_token;
+
+                    // Get list user from domain
+                    $.ajax({
+                            dataType: 'json',
+                            data: {domainAccessToken: domainAccessToken},
+                            url: 'getListUsers',
+                            type: 'GET'
+                        })
+                        .done(function (data) {
+                            if (data.message == 'success') {
+                                var contacts = data.result.users;
+                                var elementContact;
+                                console.log(contacts)
+                                if (contacts.length > 0) {
+                                    // Iterate through entries and append contacts to DOM
+
+                                    elementContact = $('<select id="chat-contacts" class="form-control">');
+                                    contacts.forEach(function (entry) {
+                                        var $option = $('<option>');
+                                        var fullUsername = entry.user_id + '@' + entry.domain_name;
+                                        $option.val(fullUsername).text(fullUsername);
+                                        elementContact.append($option);
+                                    });
+
+                                    $('.chat-contact-wrapper').html(elementContact);
+                                }
+                            }
+                        })
+                        .fail(function () {
+                            //showMessage('Sorry, there was an error with your request!', 'error');
+                        })
+                        .always(function () {
+                        });
+                }
+            })
+            .fail(function () {
+                //showMessage('Sorry, there was an error with your request!', 'error');
+            })
+            .always(function () {
+            });
+
+        return false;
     };
 
     /**
@@ -140,6 +202,10 @@ $(function () {
 
         hideMessage();
 
+        if (getCookie("apiSecret") !== '') {
+            loadContacts();
+        }
+
         // Checks every 5 seconds for incoming messages
         setInterval(receiveMessages, 5000);
     };
@@ -188,7 +254,7 @@ $(function () {
 
         // Scroll to bottom the panel
         $("body, html").animate({ scrollTop: $("#send-btn").offset().top}, 0); // 40 ms
-        $("#chat-messages").animate({ scrollTop: $("#chat-messages")[0].scrollHeight}, 0); // 40 ms
+        $('#chat-messages').animate({ scrollTop: $("#chat-messages")[0].scrollHeight}, 0); // 40 ms
     };
 
     /**
@@ -243,7 +309,8 @@ $(function () {
         $('#login-form').removeClass('hidden');
         $('#logged-in').addClass('hidden');
         $('.username').text('');
-        $('#chat-contacts').html('');
+        $('.chat-contact-wrapper').html('');
+        $('#chat-messages').html('');
         $('.tab-sms-chat-wrapper').hide();
         hideMessage();
 

@@ -68,14 +68,16 @@ $(function () {
     }
 
     var saveAuthData = function() {
-        var expireDays = 14;
+        var expireDays = 14;    // days
         setCookie("apiKey", $('#api_key').val(), expireDays);
+        setCookie("apiSecret", $('#api_secret').val(), expireDays);
         setCookie("username", $('#username').val(), expireDays);
         setCookie("password", $('#password').val(), expireDays);
     };
 
     var fillAuthData = function() {
         $('#api_key').val(getCookie("apiKey"));
+        $('#api_secret').val(getCookie("apiSecret"));
         $('#username').val(getCookie("username"));
         $('#password').val(getCookie("password"));
     };
