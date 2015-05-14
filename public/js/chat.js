@@ -117,12 +117,15 @@ $(function () {
                             if (data.message == 'success') {
                                 var contacts = data.result.users;
                                 var elementContact;
-                                console.log(contacts)
                                 if (contacts.length > 0) {
                                     // Iterate through entries and append contacts to DOM
 
                                     elementContact = $('<select id="chat-contacts" class="form-control">');
                                     contacts.forEach(function (entry) {
+                                        // Ignore user logged in
+                                        if (entry.user_id == username) {
+                                            return;
+                                        }
                                         var $option = $('<option>');
                                         var fullUsername = entry.user_id + '@' + entry.domain_name;
                                         $option.val(fullUsername).text(fullUsername);
@@ -234,16 +237,15 @@ $(function () {
      */
     var appendMessage = function(username, message, dateTime, otherUser) {
         var chatWrapperCls = 'chat-user-wrapper';
-        if (otherUser !== undefined) {
-            chatWrapperCls = 'chat-other-user-wrapper';
-        }
 
-        var userNameDisplay;
-        userNameDisplay = '<i class="glyphicon glyphicon-user"></i>' + username;
+        var userNameDisplay = '<i class="glyphicon glyphicon-user"></i>' + username;
 
         var otherUserElement = '';
         if (otherUser !== undefined) {
+            chatWrapperCls = 'chat-other-user-wrapper';
             otherUserElement = ' data-user-id="' + otherUser + '"';
+            // Select user from message return
+            $('#chat-contacts').val(otherUser);
         }
 
         var $username = $('<h5 class="chat-username"' + otherUserElement + ' title="' + dateTime + '">').html(userNameDisplay);
@@ -278,7 +280,6 @@ $(function () {
                         messages.forEach(function (msg) {
 
                             if (msg.messageType == 'chat' && msg.contentType === 'text' && msg.message.mimeType == 'text/plain') {
-                                $('#sms_message').val('');
                                 appendMessage(msg.sender.user_id, msg.message.text, formatDate(new Date(msg.timestamp)), msg.sender.full_user_id);
                             } else {
                                 // When the recieved messageType is not chat, display message type
