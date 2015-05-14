@@ -8,7 +8,7 @@
 	"dependencies": {
 		"express": "4.12.x",
 		"cfenv": "1.0.x",
-		"kandy": "1.2.4"
+		"kandy": "1.2.5"
 	},
 	"repository": {}
 }
