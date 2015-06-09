@@ -13,6 +13,8 @@ $(function () {
         $('.alert-message-wrapper').removeClass(currentMessageType);
         currentMessageType = 'alert-' + (type == 'error' ? 'danger' : 'success');
         $('.alert-message-wrapper').addClass(currentMessageType).show();
+
+        $(".alert").animate({opacity: 1.0}, 10000).fadeOut("slow");
     };
 
     /**

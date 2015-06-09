@@ -175,3 +175,136 @@
 .chat-other-user-wrapper .chat-username {
     cursor: pointer;
 }
+
+.group-item-member {
+    border-bottom: 1px solid #EFEFEF;
+    padding: 6px;
+}
+
+.group-item-member-owner {
+    font-weight: bold;
+}
+
+.group-item-member-other:nth-of-type(odd) {
+    background: #F9F9F9;
+}
+
+.group-info-name {
+    float: left;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.group-info-name.active {
+    font-weight: bold;
+}
+
+.group-item-wrapper {
+    border-bottom: 1px solid #F0F0F0;
+    padding: 2px 4px;
+}
+
+.group-item-wrapper .close {
+    font-size: 14px;
+}
+
+.group-info-wrapper button:focus {
+    outline: none;
+}
+
+.gc-add-member-wrapper {
+    margin-right: 10px;
+}
+
+.gc-add-member-wrapper input {
+    padding: 0 2px;
+    line-height: 16px;
+    font-size: 12px;
+    width: 196px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    margin-right: 2px;
+}
+
+.gc-unread-label {
+    font-size: 11px;
+    border-radius: 8px;
+    padding: .1em .6em .2em;
+}
+
+.create-group-wrapper {
+    margin-bottom: 18px;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    padding: 10px;
+    overflow: visible!important;
+}
+
+.owner-group-wrapper {
+    margin-bottom: 10px;
+}
+
+.group-item-member-wrapper {
+    font-size: 11.5px;
+    margin-left: 24px;
+}
+
+.group-item-member-owner .glyphicon {
+    color: #08c;
+}
+
+.group-item-member-wrapper .group-item-member:last-child {
+    border: 0;
+}
+
+.gc-expand-btn,
+.gc-delete-btn,
+.gc-add-member-btn,
+.gc-leave-group-btn,
+.gc-add-member-submit-btn {
+    margin-right: 4px;
+    opacity: 1;
+    color: #5bc0de;
+}
+
+.gc-delete-btn {
+    color: #d9534f;
+}
+
+.gc-add-member-btn {
+    color: #5cb85c;
+}
+
+.gc-leave-group-btn {
+    color: #E7A225;
+}
+
+.gc-add-member-submit-btn {
+    color: #E7A225;
+}
+
+.gc-chat-with-label {
+    font-weight: normal;
+}
+
+.gc-chat-with-label span {
+    font-weight: bold;
+}
+
+hr {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.logo-wrapper {
+    width: 50%;
+    float: left;
+}
+
+.gc-add-member-input:focus {
+    outline: none;
+}
+
+#chat-container .close:focus, #chat-container .close:hover {
+    color: inherit;
+}

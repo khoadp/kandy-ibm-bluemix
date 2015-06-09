@@ -1,0 +1,82 @@
+<% include header %>
+
+  <div class="container">
+      <div class="row">
+          <div class="col-md-6 col-md-offset-3" id="activity-container">
+
+              <% include header-section %>
+
+              <% include login-form %>
+
+              <div role="tabpanel" class="tab-sms-chat-wrapper" style="display: none">
+                  <!-- Nav tabs -->
+                  <ul class="nav nav-tabs" role="tablist">
+                      <li role="presentation"><a href="/">Send SMS</a></li>
+                      <li role="presentation"><a href="chat">Send Message</a></li>
+                      <li role="presentation" class="active"><a href="#chat-group" >Group Chat</a></li>
+                  </ul>
+              </div>
+
+              <div class="hidden" id="logged-in">
+                  <div class="clearfix">
+                      <h3 class="text-center pull-left">Group Chat</h3>
+
+                      <div class="pull-right logout-wrapper">
+                          <button class="btn btn-warning btn-sm pull-right" id="logout-btn">
+                              <i class="glyphicon glyphicon-log-out"></i>
+                          </button>
+                          <p class="h4 pull-right">
+                              Welcome <strong><span class="username"></span></strong>
+                          </p>
+                      </div>
+                  </div>
+                  <hr/>
+                  <div id="chat-container">
+                      <div class="well chat-messages-wrapper">
+                          <h3>
+                              Messages <span class="gc-chat-with-header" style="display: none">(<span></span>)</span>
+                          </h3>
+                          <div id="chat-messages"></div>
+                      </div>
+
+                      <div id="message-input">
+                          <div class="form-group">
+                              <div class="clearfix gc-create-group-wrapper">
+                                  <button name="button" type="button" class="btn btn-primary btn-xs form-group pull-right" id="create-group-btn">
+                                      <span class="glyphicon glyphicon-plus"></span> Create group
+                                  </button>
+
+                                  <div class="create-group-wrapper" style="display: none">
+                                      <div class="form-group">
+                                          <input class="form-control" id="group-name-input" placeholder="Group name">
+                                      </div>
+                                      <button name="button" type="button" class="btn btn-success btn-sm" id="create-group-save-btn">Save</button>
+                                  </div>
+                              </div>
+
+                              <div class="group-chat-contact-wrapper">
+                                  <label class="required">Your Groups</label>
+                                  <div class="owner-group-wrapper">
+                                  </div>
+                                  <label class="required">Other Groups</label>
+                                  <div class="other-group-wrapper">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label for="group_message" class="required">Message <abbr title="required">*</abbr></label>
+                              <label class="hide gc-chat-with-label">(Chatting with <span></span>)</label>
+                              <input rows="1" name="group_message" id="group_message" class="form-control"/>
+
+                          </div>
+                          <button name="button" type="button" class="btn btn-success" id="send-btn">Send</button>
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+    <!--Js for example-->
+    <script type="text/javascript" src="js/chat-group.js"></script>
+<% include footer %>
