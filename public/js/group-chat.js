@@ -138,11 +138,11 @@ $(function () {
         var groupItem = $('<div class="group-item">');
         var groupInfoWrapper = $('<div class="clearfix group-info-wrapper"><div class="group-info-name">' + group.group_name + ' <span class="label label-warning gc-unread-label" style="display: none"></span></div></div>');
 
-        groupInfoWrapper.append('<button type="button" class="close gc-expand-btn"><span class="glyphicon glyphicon-chevron-right"></span></button>');
+        groupInfoWrapper.append('<button type="button" class="close gc-expand-btn" title="Expand"><span class="glyphicon glyphicon-chevron-right"></span></button>');
         if (isOwner) {
             groupInfoWrapper.append('<button type="button" title="Delete group" class="close gc-delete-btn"><span class="glyphicon glyphicon-remove"></span></button>');
             groupInfoWrapper.append('<button type="button" title="Add member" class="close gc-add-member-btn"><span class="glyphicon glyphicon-plus"></span></button>');
-            groupInfoWrapper.append('<div class="pull-right gc-add-member-wrapper" style="display: none"><input type="text" class="gc-add-member-input" placeholder="member id"><button type="button" class="close gc-add-member-submit-btn"><span class="glyphicon glyphicon-ok"></span></button></div>');
+            groupInfoWrapper.append('<div class="pull-right gc-add-member-wrapper" style="display: none"><input type="text" class="gc-add-member-input" placeholder="user@domain.com"><button type="button" class="close gc-add-member-submit-btn"><span class="glyphicon glyphicon-ok"></span></button></div>');
         } else {
             groupInfoWrapper.append('<button type="button" title="Leave group" class="close gc-leave-group-btn"><span class="glyphicon glyphicon-log-out"></span></button>');
         }
@@ -154,7 +154,7 @@ $(function () {
         var owners = group.owners;
         owners.forEach(function(ownerMember) {
             var memberWrapper = $('<div class="group-item-member group-item-member-owner"><i class="glyphicon glyphicon-user"></i> </div>');
-            memberWrapper.append(ownerMember.full_user_id);
+            memberWrapper.append(ownerMember.full_user_id + ' <i class="group-item-member-owner-hint">(owner)</i>');
             groupMemberWrapper.append(memberWrapper);
         });
 
@@ -532,7 +532,7 @@ $(function () {
         $('#chat-contacts').val($(this).attr('data-user-id'));
     });
 
-    $('#create-group-btn').live('click', function () {
+    $('#create-group-btn, #create-group-cancel-btn').live('click', function () {
         $('.create-group-wrapper').toggle();
     });
 
@@ -567,7 +567,7 @@ $(function () {
     });
 
     $('.gc-delete-btn').live('click', function(){
-        if (!confirm('Are you sure want to delete this group?')) {
+        if (!confirm('Are you sure you want to delete this group?')) {
             return false;
         }
 
@@ -630,7 +630,7 @@ $(function () {
     });
 
     $('.gc-leave-group-btn').live('click', function(){
-        if (!confirm('Are you sure want to leave this group?')) {
+        if (!confirm('Are you sure you want to leave this group?')) {
             return false;
         }
 
@@ -703,7 +703,7 @@ $(function () {
     });
 
     $('.gc-remove-member-btn').live('click', function(){
-        if (!confirm('Are you sure want to delete remove this member?')) {
+        if (!confirm('Are you sure you want to delete remove this member?')) {
             return false;
         }
 
