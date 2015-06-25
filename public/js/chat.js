@@ -356,6 +356,12 @@ $(function () {
         return false;
     });
 
+	$('#sms_message').on('keypress', function(e){
+		if (e.which == 13) {
+			$('#send-btn').trigger('click');
+		}
+	});
+
     $(document).ready(function(){
         fillAuthData();
 
